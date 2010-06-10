@@ -302,48 +302,7 @@ measures of uncertainty.  For realized volatilty we are particularly
 interested in measuring uncertainty by the fluctuations observed in
 stock prices, i.e. in the quadratic variation of prices.
 
-\chapter{The Mathematics}
-
-\section{Realized Volatility Preliminaries}
-
-For simplicity's sake, consider an Ito process
-\[
-X_t = \int_0^t \mu_s ds + \int_0^t \sigma_s dW_s.
-\]
-The quadratic variation of such a process is given by
-\[
-\quadvar{X}_t = \int_0^t \sigma_s^2 ds.
-\]
-The qunatity in the right hand side is refered to as the
-\emph{integrated volatility}.  There are various ways to define
-quadratic varation.  The definition above ensures that the quadratic
-variation of $X_t$ is the increasing process $\quadvar{X}_t$, null at
-time $t=0$, such that $X_t^2 - \quadvar{X}_t$ is a martingale. 
-Equivalently the quadratic variation is the limit in probability of
-\[
-\sum_{\mcG} (X_{t_{i+1}} - X_{t_i})^2
-\]
-as the partitions $\mcG$ shrink to zero.  This gives rise to two
-important observations
-\begin{enumerate}
-\item the quadratic varation is a measure of ``randomness'', that is
-the magnitude of the fluctuations in process movements;
-\item the quadratic varation can be (almost) observed.
-\end{enumerate}
-If we think of $X_t$ as the log returns a stock price process, then we
-will, in fact, observe $(X_t)$ whenever a trade occurs.  Hence we can
-compute
-\[
-\sum_{\mcG} (X_{t_{i+1}} - X_{t_i})^2
-\]
-for a specific partition.  Since stock trades occur with high
-frequency the partition one observes in the real world should be quite
-fine and hence the approximation given above should be close to
-$\quadvar{X}_t$.  Of course we need to make these statements more
-precise, but this will more or less be the case.  These notes are
-taken from Per Mykland.
-
-\subsection{Motivation}
+\section{Motivation}
 
 That one can make such an approximation is financially useful as well as
 mathematically interesting.  We consider a super-replication pricing
@@ -479,8 +438,72 @@ of stock at time $t$.  Realized volatility can be used to approximate
 the quantity $V_t$.  In sum, realized volatility is needed for
 estimating an upper bound on $V_T$ and for hedging.
 
-\subsection{The Mathematics}
+\chapter{Modeling and Forecasting Realized Volatility}
 
+The following discussion is based primarily on the work of Andersen et. al \cite{Andersen03}.  Let us recall a few observations about equity returns.  These observations carry over to other financial assets.  As the vocabulary suggests, one usually studies equity returns as opposed to equity prices.  It is most convenient to think in terms of $\log$ returns.  Thus we will contemplate quantities such as $LR_t = \log S_t$ where $S_t$ is the price of a stock.  One can then easily specify different periods on which to observe returns.  If time is measured in days, the daily log returns are given by $DLY_{t+1} = LR_{t+1}-LR_{t}$ whereas the weekly log returns are given by $LR_{t+7}-LR_{t}$.
+
+If one starts to examine the daily log returns, for instance, he or she will find that the autocorrelation is zero for all leads and lags, suggesting that the daily returns are white noise.  The distribution of daily returns has more mass in its center and in its tails than the normal distribution.  Lastly, it appears that the volatiltiy of the daily log returns has some stickiness.  Times of high volatiltiy tend to persist as do times of low volatilty.  A measure of these fluctuations is the square of the daily log returns.  When calculating the sample autocorrelation this time series displays strong serial dependence.  This suggests that we should attempt to model the square of the daily log returns, since this time series has a richer description.
+
+ARMA processes do not capture this range of phenomenon and consequently econometricians have developed several alternate time series models.  The GARCH family of models is the most well-known alternative method of modeling this phenomenon.  The basic idea behind the GARCH class of models is that the conditional variance or volatilty, given by $\sigma_t^2 = \bbE[DLY_t^2 | \mcF_{t-1}]$ follows some linear difference equation in $\sigma_{t-s}^2$ and $LR_{t-s}^2$.
+
+Of course these models are confined to the realm of discrete time stochastic processes.  Financial mathematicians prefer continuous time models since, they are ammenable to stochastic calculus.  A class of continuous time models exists as well, called stochastic volatiltiy models\footnote{This name may be incorrect, or if it is not incorrect, it is at least misleading, since GARCH is most certainly a form of stochastic volatiltiy.}.  In these models, the log returns of stocks are governed by
+\[
+d \; DLY_t = \mu_t dt + \sigma_t dW_t
+\]
+where $\sigma_t$ is now governed by some dynamics
+\[
+d \; \sigma_t^2 = \textmd{ Right hand side of SDE }.
+\]
+This is the same idea as GARCH.  One is trying to specify the ``volatilty of volatiltiy.''  When attempting to calibrate these models one must inevitably discretize time and look and, for instance, the square of daily log returns.*
+
+Closely related to the sqaure of log returns is the quadratic variation.  We will see that it is more natural to estimate and model this quantity in the presence of high frequency data than the daily returns.  (I need to add more here about the virtues of quadratic variation as a quantity.)
+
+\section{Modeling}
+
+
+
+\chapter{The Mathematics of Realized Volatility}
+
+\section{Preliminaries}
+
+For simplicity's sake, consider an Ito process
+\[
+X_t = \int_0^t \mu_s ds + \int_0^t \sigma_s dW_s.
+\]
+The quadratic variation of such a process is given by
+\[
+\quadvar{X}_t = \int_0^t \sigma_s^2 ds.
+\]
+The qunatity in the right hand side is refered to as the
+\emph{integrated volatility}.  There are various ways to define
+quadratic varation.  The definition above ensures that the quadratic
+variation of $X_t$ is the increasing process $\quadvar{X}_t$, null at
+time $t=0$, such that $X_t^2 - \quadvar{X}_t$ is a martingale. 
+Equivalently the quadratic variation is the limit in probability of
+\[
+\sum_{\mcG} (X_{t_{i+1}} - X_{t_i})^2
+\]
+as the partitions $\mcG$ shrink to zero.  This gives rise to two
+important observations
+\begin{enumerate}
+\item the quadratic varation is a measure of ``randomness'', that is
+the magnitude of the fluctuations in process movements;
+\item the quadratic varation can be (almost) observed.
+\end{enumerate}
+If we think of $X_t$ as the log returns a stock price process, then we
+will, in fact, observe $(X_t)$ whenever a trade occurs.  Hence we can
+compute
+\[
+\sum_{\mcG} (X_{t_{i+1}} - X_{t_i})^2
+\]
+for a specific partition.  Since stock trades occur with high
+frequency the partition one observes in the real world should be quite
+fine and hence the approximation given above should be close to
+$\quadvar{X}_t$.  Of course we need to make these statements more
+precise, but this will more or less be the case.  These notes are
+taken from Per Mykland.
+
+(This is from before I rearranged some content.)
 Now that we have seen that integrated volatility and hence realized
 volatility are useful quantities we want to examine how they are
 related.  In particular, we want to study the various ways in which
@@ -578,7 +601,7 @@ intersted to know that realized volatilty goes by several names.  It
 is also refered to as the realized variance.  In this case, realized
 volatiltiy refers to the square root of realized variance.
 
-\subsubsection{The Error Process}
+\subsection{The Error Process}
 
 To makes this treatment a bit more rigorous.  Let $\mcG^n$ be a
 partition with $n$ components.  The error process for the $n$th
@@ -632,7 +655,7 @@ martingale $X_t$.
 
 % $M^i_t$ - the error on the ith interval
 
-\subsubsection{Stochastic Order Symbols}
+\subsection{Stochastic Order Symbols}
 
 For notational convenience we introduce the idea of stochastic order
 symbols, which are analogous to the order symbols found in analysis. 
@@ -669,7 +692,7 @@ We also know that if we have a sequence $(a_n)$ which eventually
 dominates $(b_n)$ that $X_n = o_p(a_n)$ and $Y_n = o_p(b_n)$ imply
 that $X_n + Y_n = o_p(a_n)$.  Thus $o_p(a_n) + o_p(b_n) = o_p(a_n)$. 
 
-\subsubsection{$r$-ticity}
+\subsection{$r$-ticity}
 
 In what follows, the fluctuations in the mesh size will play a key
 role in determining convergence.  These fluctuations enter the picture
