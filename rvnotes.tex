@@ -304,12 +304,14 @@ stock prices, i.e. in the quadratic variation of prices.
 
 \section{Motivation}
 
-That one can make such an approximation is financially useful as well as
+That one can make such an approximation is financially useful as well
+as
 mathematically interesting.  We consider a super-replication pricing
 scheme in an incomplete market.  This construction will rely on the
 the Black-Scholes pricing mechanism.  
 
-To remind the reader, the Black-Scholes model consists of a money market
+To remind the reader, the Black-Scholes model consists of a money
+market
 process $B_t$ and a stock process governed by Geometric Brownian
 Motion,
 \[
@@ -435,32 +437,175 @@ for the integrated volatility at time $T$.  Using this bound, one
 would know what proportion of the time this super-replicating strategy
 would work.  Second, when heding one trades $C_S(S_t, V_t, R_t)$ units
 of stock at time $t$.  Realized volatility can be used to approximate
-the quantity $V_t$.  In sum, realized volatility is needed for
+the quantity $V_t$.  In sum, realized volatility is needed for 
 estimating an upper bound on $V_T$ and for hedging.
 
 \chapter{Modeling and Forecasting Realized Volatility}
 
-The following discussion is based primarily on the work of Andersen et. al \cite{Andersen03}.  Let us recall a few observations about equity returns.  These observations carry over to other financial assets.  As the vocabulary suggests, one usually studies equity returns as opposed to equity prices.  It is most convenient to think in terms of $\log$ returns.  Thus we will contemplate quantities such as $LR_t = \log S_t$ where $S_t$ is the price of a stock.  One can then easily specify different periods on which to observe returns.  If time is measured in days, the daily log returns are given by $DLY_{t+1} = LR_{t+1}-LR_{t}$ whereas the weekly log returns are given by $LR_{t+7}-LR_{t}$.
+Let us recall a few observations about equity returns.  These
+observations carry over to other financial assets.  As the vocabulary
+suggests, one usually studies equity returns as opposed to equity
+prices.  It is most convenient to think in terms of $\log$ returns. 
+Thus we will contemplate quantities such as $LR_t = \log S_t$ where
+$S_t$ is the price of a stock.  One can then easily specify different
+periods on which to observe returns.  If time is measured in days, the
+daily log returns are given by $D_{t+1} = LR_{t+1}-LR_{t}$ whereas the
+weekly log returns are given by $LR_{t+7}-LR_{t}$.
 
-If one starts to examine the daily log returns, for instance, he or she will find that the autocorrelation is zero for all leads and lags, suggesting that the daily returns are white noise.  The distribution of daily returns has more mass in its center and in its tails than the normal distribution.  Lastly, it appears that the volatiltiy of the daily log returns has some stickiness.  Times of high volatiltiy tend to persist as do times of low volatilty.  A measure of these fluctuations is the square of the daily log returns.  When calculating the sample autocorrelation this time series displays strong serial dependence.  This suggests that we should attempt to model the square of the daily log returns, since this time series has a richer description.
+If one starts to examine the daily log returns, for instance, he or
+she will find that the autocorrelation is zero for all leads and lags,
+suggesting that the daily returns are white noise.  The distribution
+of daily returns has more mass in its center and in its tails than the
+normal distribution.  Lastly, it appears that the volatiltiy of the
+daily log returns has some stickiness.  Times of high volatiltiy tend
+to persist as do times of low volatilty.  A measure of these
+fluctuations is the square of the daily log returns.  When calculating
+the sample autocorrelation this time series displays strong serial
+dependence.  This suggests that we should attempt to model the square
+of the daily log returns, since this time series has a richer
+description.
 
-ARMA processes do not capture this range of phenomenon and consequently econometricians have developed several alternate time series models.  The GARCH family of models is the most well-known alternative method of modeling this phenomenon.  The basic idea behind the GARCH class of models is that the conditional variance or volatilty, given by $\sigma_t^2 = \bbE[DLY_t^2 | \mcF_{t-1}]$ follows some linear difference equation in $\sigma_{t-s}^2$ and $LR_{t-s}^2$.
+ARMA processes do not capture this range of phenomenon and
+consequently econometricians have developed several alternate time
+series models.  The GARCH family of models is the most well-known
+alternative method of modeling this phenomenon.  The basic idea behind
+the GARCH class of models is that the conditional variance or
+volatilty, given by $\sigma_t^2 = \bbE[D_t^2 | \mcF_{t-1}]$ follows
+some linear difference equation in $\sigma_{t-s}^2$ and $LR_{t-s}^2$.
 
-Of course these models are confined to the realm of discrete time stochastic processes.  Financial mathematicians prefer continuous time models since, they are ammenable to stochastic calculus.  A class of continuous time models exists as well, called stochastic volatiltiy models\footnote{This name may be incorrect, or if it is not incorrect, it is at least misleading, since GARCH is most certainly a form of stochastic volatiltiy.}.  In these models, the log returns of stocks are governed by
+Of course these models are confined to the realm of discrete time
+stochastic processes.  Financial mathematicians prefer continuous time
+models since, they are ammenable to stochastic calculus.  A class of
+continuous time models exists as well, called stochastic volatiltiy
+models\footnote{This name may be incorrect, or if it is not incorrect,
+it is at least misleading, since GARCH is most certainly a form of
+stochastic volatiltiy.}.  In these models, the log returns of stocks
+are governed by
 \[
-d \; DLY_t = \mu_t dt + \sigma_t dW_t
+d \; D_t = \mu_t dt + \sigma_t dW_t
 \]
 where $\sigma_t$ is now governed by some dynamics
 \[
 d \; \sigma_t^2 = \textmd{ Right hand side of SDE }.
 \]
-This is the same idea as GARCH.  One is trying to specify the ``volatilty of volatiltiy.''  When attempting to calibrate these models one must inevitably discretize time and look and, for instance, the square of daily log returns.*
+This is the same idea as GARCH.  One modeling the ``volatilty of
+volatiltiy.''  When attempting to calibrate these models one must
+inevitably discretize time and look and, for instance, the square of
+daily log returns.*
 
-Closely related to the sqaure of log returns is the quadratic variation.  We will see that it is more natural to estimate and model this quantity in the presence of high frequency data than the daily returns.  (I need to add more here about the virtues of quadratic variation as a quantity.)
+Closely related to the square of log returns is the quadratic
+variation.  We will see that it is more natural to estimate and model
+this quantity in the presence of high frequency data than the daily
+returns.  (I need to add more here about the virtues of quadratic
+variation as a quantity.)
 
 \section{Modeling}
 
+The following discussion is based primarily on the paper ``Modeling
+and Forecasting Realized Volatility'' by Andersen et al.\
+\cite{Andersen03}.  As the name of the paper suggests, we will be
+discussing a model of realied volatitlity and the forecasts this model
+provides.  Specifically, Andersen et al.\ study the U.S. Dollar,
+Deutschemark, and Japanese yet exchange rate markets.  Exchange rate
+markets liquid and active markets, making them a natural candidate of
+examination for high frequency data analysis.  Andersen's group has
+thirteen years of data that they break into a ten year ``in-sample''
+period and a three year ``out-of-sample'' period.
 
+Realized volatility is a non-paremetric estimate of the quadratic
+variation of a stochastic process.  Thus the price process of the
+exchnage rate is only constrained to being a semimartinagle, as this
+is the most general condition that ensures we will have no arbitrage. 
+(Later, we will see that the assumption that price processes are
+semimartingales proves to be troublesome.  This can be remedied by
+incorporating market microstructure noise in our model.)  In general,
+if $p_t$ is the logarithm of some price process then we define $r_t$
+to be $h$ period returns of $p_t$.  When we have multiple assets $p_t$
+and $r_t$ are multidimensional processes.  In our current context we
+will take $r_t$ to be two-dimentional, with first coordinate
+corresponding to the \deu/\dol exchange rate and the second
+cooredinate corresponding to the \yen/\dol exchange rate.  The
+quadratic varation $[r,r]_t$ is then a symmetric matrix valued
+process.
+
+\begin{remark}
+One must be careful in how exactly he or she defines the ``price'' of
+an asset.  In fact, care of this definition becomes more imperative as
+we observe a time series at higher frequencies.  One simple
+definition, is that the price of an asset is whatever an individual is
+willing to pay for it.  However, the data one receives does not
+reflect this definition.  In fact, there are sevaral different time
+series one can study when trying to come up with the ``price'' of an
+asset.  For intance, the Trades and Quote database provides quote data
+as well as trade data.  Thus one has access to information regarding
+the bid price of an asset, the ask price of an asset and the price at
+which an asset \emph{was} traded.  The past tense emphasizes the a
+posteri nature of the asset's price.  The price is recorded once the
+trade has occured, not prior to the trade occuring.  The Trades and
+Quotes database also includes information about the number of shares
+avaiblable at the bid and ask price as well as the number of shares
+that were traded.
+
+Karel Janicek says that the correct price of an asset can only be
+determined if one may observe the entire limit order book.  This makes
+sense to me since one then will have a measure of supply and demand
+for an asset.  He suggests that a proxy is the harmonic average of the
+bid and ask price weighted by the number of shares available at that
+price.  Harmonic averaging is indeed the correct form of averaging as
+this article suggests [citation].
+
+When one looks at actual data and computes the realized volatility he
+or she will find that this elusive notion of price becomes a relavent
+issue.  In particular, data suggests that market microstructure noise
+overshadows the movements of an assets underlying price over short
+time intervals.  This issue must be addressed since our realized
+volatiltiy estimate does not currently take this noise into account. 
+\end{remark}
+
+To remind the reader, one of the reasons we like quadratic variation
+is because, in theory, it is almost observable when we have high
+frequency data.  In reality we cannot observe the entire path of
+$r_t$, we can only observe $r_t$ at discrete intervals.  This gives
+rise to realized volatility which is an estimate of quadratic
+variation.  When our data is observed at a high enough frequency 
+\[
+\sum_{t \geq t_i \in \mcG} (r_{t_{i,+}} - r_{t_i})^2 \sim [r,r]_t.
+\]
+Andersen et al.\ use 30-minute returns, that is $r(t) = p(t) - 
+p(t-1/48)$.  Here time is measured in days.  From these returns, they
+construct the $h$-day realized volatitly measures
+\[
+V_{t,h} = \sum_{j = 1}^{h/\Delta} r(t-h+j \Delta) \cdot r(t-h+j
+\Delta)
+\]
+where $\Delta = 1/48$ hours = 30 minutes.  Andersen et al.\ note that
+multivariate GARCH models often have difficulties maintaining positive
+defiinite estimates for the covariance matrix.  Realized volatilty
+estimates do not have this same problem.  Speaking heuristically,
+$V_{t,h}$ is probably positive definite unless there is relatively
+little data compared to the number of assets present.  Since we are
+working with high frequency data this is unlikely to be a problem.
+
+We must address a few technical issues.  Suppose for the moment that the first coordinate of our price process corresponds to the \deu/\$ exchange rate, the second coordiante of our price process corresponds to the \yen/\$ exchange rate, and the third coordinate of our price process corresponds to the \yen/\deu exchange rate.  Define the 30-minute daily quadratic variation for each coordinate by
+\[
+v_{t+1,i} = \sum_{j=1}^{1/\Delta} \Big( r^{(i)}(t + j \Delta)-r^{(i)}(t + (j-1) \Delta) \Big)^2.
+\]
+The realized cross-variation is defined in a similar way and will be denoted like $v_{t,12}$.  In the abscence of arbitrage the third coordinate of this process is superfluous and we should have that $r^{(1)} - r^{(2)} = r^{(3)}$.  Furthermore, the cross variation should relate to the quadratic variation of the third component by
+\[
+v_{t,12} = \frac{1}{2} (v_{t,1} + v_{t,2} - v_{t,3}).
+\]
+
+Now that we have defined the relavanet quantities we may discuss the distribution of the 30-minute returns and of the realized volatility.  (This corresponds to Section 4 in Andersen et al.)  Andersen et al.\ look at four different quantities: the daily log returns, the daily log returns standardized by the daily realized volatiltiy, the daily realized volatility, and the logarithm of the daily realized volatility.
+
+Their findings regarding daily returns are consistent with the other studies, including fat tails and strong serial correlation for the square of daily reutrns.  Standardized returns refer to daily returns standardized by daily realized volatility, that is quantities such as $r^{(1)}_t / v^{-1/2}_{t,1}$.  The standardized returns are approximately normal and the square of standardized returns does not show evidence of serial correlation.  According to Andersen et al. \textbf{this suggests that returns should be modeled using a ``fat-tailded normal mixture distribution governed by realized volatilities.''}  Realized volatility appears to be right-skewed and leptokurtic with strong serial correlation.  The logarithm of realized volatility is approximately normal with strong serial correlation.
+
+\section{Forecasting}
+
+Andersen et al.\ follow earlier long-memory volatiltiy work and pursue a fractionally integrated model of realized volatitlity, which they call VAR-RV.  In particular, they chose to model volatility as a fractionally integrated VAR, whose distribution is governed by
+\[
+\Phi(L) (1-L)^d (y_t - \mu) = \ep_t.
+\]
+Here $y_t$ will be our proxy for daily realized volatility.  The value of $d$ is found to be $0.401$ and $\Phi$ is a fifth order lag polynomial.  Andersen et al.\ calibrate this model to ten years of data then use the remaining two and a half years of data to do out of sample testing.  They find that this model produces better forecasts than than most GARCH like models.
 
 \chapter{The Mathematics of Realized Volatility}
 
@@ -1550,28 +1695,40 @@ process
 \[
 dX_t = \sigma_t dW_t.
 \]
-A few definitions are in order.  We will be working with \emph{partitions} or \emph{grids} of the real number line.  Thus a partition is an increasing sequence of real numbers $\mcG = \{ t_0, \ldots, t_n \}$.  Often we will refer to some subgrid of $\mcH \subset \mcG$.  The size of a grid is given by 
+A few definitions are in order.  We will be working with
+\emph{partitions} or \emph{grids} of the real number line.  Thus a
+partition is an increasing sequence of real numbers $\mcG = \{ t_0,
+\ldots, t_n \}$.  Often we will refer to some subgrid of $\mcH \subset
+\mcG$.  The size of a grid is given by 
 \[
 |\mcH| = \{ \textmd{\# of points in } \mcH \} - 1.
 \]
-Sometimes the grids we work with will be deterministic, but often we will have random grids, which correspond to the random times at which stocks trade.  The realized quadratic variation of a semimartinagle $Z$, given the grid $\mcH$ is denoted and defined by
+Sometimes the grids we work with will be deterministic, but often we
+will have random grids, which correspond to the random times at which
+stocks trade.  The realized quadratic variation of a semimartinagle
+$Z$, given the grid $\mcH$ is denoted and defined by
 \[
 [Z,Z]^\mcH_t = \sum_{t_j \in \mcH : t_j < t} (Z_{t_{j,+}}-Z_{t_j})^2.
 \]
-Here $t_{j,+}$ is the next element greater than $t_j$ in $\mcH$.  Now we can being to examine various estimates of the quadratic variation in the presence of microstructure noise.
+Here $t_{j,+}$ is the next element greater than $t_j$ in $\mcH$.  Now
+we can being to examine various estimates of the quadratic variation
+in the presence of microstructure noise.
 
 \subsection{Sampling on one time scale}
 
 Zhang and associates rank five different approaches one can take to
 estimating realized volatility.  The ``fifth-best'' estimate is to
-take the naive approach and calculate the realized volatilty as if no measurement error had occured.  If $\mcG$ is the partition of the
+take the naive approach and calculate the realized volatilty as if no
+measurement error had occured.  If $\mcG$ is the partition of the
 observed prices this would correspond computing
 \[
 [Y,Y]^{(all)} = \sum_{t_i \in \mcG} (Y_{t_i} - Y_{t_{i-1}})^2.
 \]
-Here $(all)$ represents the entire grid of observations.  If one expands this out he or she finds that
+Here $(all)$ represents the entire grid of observations.  If one
+expands this out he or she finds that
 \[
-[Y,Y]^{(all)} = [X,X]_T^{(all)} + 2 [X,\ep]_T^{(all)} + [\ep,\ep]_T^{(all)}.
+[Y,Y]^{(all)} = [X,X]_T^{(all)} + 2 [X,\ep]_T^{(all)} +
+[\ep,\ep]_T^{(all)}.
 \]
 We are thinking of $\ep_t$ as some point process here.
 Assuming that there are $n$ gridpoints in $\mcG$ the error associated
@@ -1581,11 +1738,18 @@ with this estimate is
 \]
 A more specific asymptotic statement is that
 \[
-n^{-1/2} \Big( [Y,Y]^{(all)}_T - 2 n \bbE \ep^2 ) \ra_\mcL 2 (\bbE \ep^4)^{1/2} Z_{noise},
+n^{-1/2} \Big( [Y,Y]^{(all)}_T - 2 n \bbE \ep^2 ) \ra_\mcL 2 (\bbE
+\ep^4)^{1/2} Z_{noise},
 \]
-where noise is a standard normal random variable.  The subscript indicates that this quantity converges to the error generated by the microstructure noise.
+where noise is a standard normal random variable.  The subscript
+indicates that this quantity converges to the error generated by the
+microstructure noise.
 
-The above asymptotic statement shows that the microstructure noise dominates the approximation error.  In fact, the microstructure noise is so great, that one fails to approximate the quadratic variation at all.  In other words, one does not even arrive at an estimate of the integrated volatility
+The above asymptotic statement shows that the microstructure noise
+dominates the approximation error.  In fact, the microstructure noise
+is so great, that one fails to approximate the quadratic variation at
+all.  In other words, one does not even arrive at an estimate of the
+integrated volatility
 $\int_0^t \sigma^s ds$.  \emph{However, one could use this estimate to
 measure the variance of the observation error.}  This is an important
 observation for two future discussions.  First, as noted above, stock
@@ -1638,11 +1802,29 @@ Here $Z_{total}$ is a standard normal random variable.
 
 Improving upon this ``sparse method,'' Zhang et. al propose the
 ``thrid best'' approach, which is to chose a subsampling frequency
-that minimizes the mean squared error of the estimate.  You will notice that there the analysis of the fourth best estimate simply choses an arbitrary $n_{sparse}$.  The third best method is simply an analysis of which is the best $n_{sparse}$ to chose.
+that minimizes the mean squared error of the estimate.  You will
+notice that there the analysis of the fourth best estimate simply
+choses an arbitrary $n_{sparse}$.  The third best method is simply an
+analysis of which is the best $n_{sparse}$ to chose.
 
 \subsection*{Using Two Time Scales}
 
-The ``second best'' method encapsulates the two time scale approach.  Recall that the subsampling method avoided the overwhelming error induced by microstructure noise by sparse subsampling.  However, this throws away lots of data.  There are two main ideas in the two time scale approach.  First, let's consider how we might make use of all the data.  When we subsample, we look at every $K$th piece of data.  But this throws away the $K-1$ pieces of data in between.  Furthermore, there is no guid as to whether we should start this subsampling at the first data point, the second data point, or the $K-1$th data point.  To rectify these two issues, we can think about generating $K-1$ different subsampled estimates.  The first estimate corresponds to starting at the first data point, the second at the second data point, up to the $K-1$ estimate starting at the $K-1$ data point.  We then take those $K$ estimates and average them.  This is a good idea because averaging tends to reduce error.  In this sense, using all the data will be helpful.
+The ``second best'' method encapsulates the two time scale approach. 
+Recall that the subsampling method avoided the overwhelming error
+induced by microstructure noise by sparse subsampling.  However, this
+throws away lots of data.  There are two main ideas in the two time
+scale approach.  First, let's consider how we might make use of all
+the data.  When we subsample, we look at every $K$th piece of data. 
+But this throws away the $K-1$ pieces of data in between. 
+Furthermore, there is no guid as to whether we should start this
+subsampling at the first data point, the second data point, or the
+$K-1$th data point.  To rectify these two issues, we can think about
+generating $K-1$ different subsampled estimates.  The first estimate
+corresponds to starting at the first data point, the second at the
+second data point, up to the $K-1$ estimate starting at the $K-1$ data
+point.  We then take those $K$ estimates and average them.  This is a
+good idea because averaging tends to reduce error.  In this sense,
+using all the data will be helpful.
 
 Asymptotically, we have that
 \[
@@ -1650,34 +1832,60 @@ Asymptotically, we have that
 \]
 where
 \[
-\xi^2 = \underbrace{4 \frac{\bar n}{K} \bbE \ep^4}_{\textmd{noise}} + \underbrace{\frac{T}{\bar n} \eta^2}_{\textmd{discretization}}.
+\xi^2 = \underbrace{4 \frac{\bar n}{K} \bbE \ep^4}_{\textmd{noise}} +
+\underbrace{\frac{T}{\bar n} \eta^2}_{\textmd{discretization}}.
 \]
-The quantity $\bar n$ is approximately the ratio of the number of points in the entire grid to how often we subsample, that is, $\bar n \sim n / K$.  The quantity $\eta^2$ is a measure of how erratic the stock price and observation times are.  The quantity $\bar n$ diverges in the limit, thus this estimate, like the previous three, is biased.
+The quantity $\bar n$ is approximately the ratio of the number of
+points in the entire grid to how often we subsample, that is, $\bar n
+\sim n / K$.  The quantity $\eta^2$ is a measure of how erratic the
+stock price and observation times are.  The quantity $\bar n$ diverges
+in the limit, thus this estimate, like the previous three, is biased.
 
 Aside: The quantity $\eta^2$ is given by
 \[
 \eta^2 = \frac{4}{3} \int_0^t \sigma_t^4 H_t dt.
 \]
-The process $H_t$ is the asymptotic quadratic variation of time that we encountered above.  It measures the time irregularity of stock trades.
+The process $H_t$ is the asymptotic quadratic variation of time that
+we encountered above.  It measures the time irregularity of stock
+trades.
 
-To rectify this bias, we look at the ``first best'' estimate.  Notice that $\bbE \ep^2$ is a quantity we can estimate using the ``fifth best'' method.  Thus we can use the realized variation over the entire partition to remove the bias in our ``second best'' estimate.  In particular, recall that
+To rectify this bias, we look at the ``first best'' estimate.  Notice
+that $\bbE \ep^2$ is a quantity we can estimate using the ``fifth
+best'' method.  Thus we can use the realized variation over the entire
+partition to remove the bias in our ``second best'' estimate.  In
+particular, recall that
 \[
 \widehat{\bbE \ep^2} = \frac{1}{2n} [Y,Y]_T^{(all)}
 \]
-estimates $\bbE \ep^2$.  Looking at the second best estimate we see that we need to remove $2 \bar n \bbE \ep^2$.  Thus we get the first best estimation of the quadratic variation of $X$ by subtracting that amount using our fifth best estimate:
+estimates $\bbE \ep^2$.  Looking at the second best estimate we see
+that we need to remove $2 \bar n \bbE \ep^2$.  Thus we get the first
+best estimation of the quadratic variation of $X$ by subtracting that
+amount using our fifth best estimate:
 \[
-\widehat{\ip{X}{X}} = [Y,Y]_T^{(avg)} - \frac{\bar n}{n} [Y,Y]^{(all)}_T.
+\widehat{\ip{X}{X}} = [Y,Y]_T^{(avg)} - \frac{\bar n}{n}
+[Y,Y]^{(all)}_T.
 \]
 Asymptotically speaking, we have
 \[
 n^{1/6} \Big( \widehat{\ip{X}{X}}_T - \ip{X}{X}_T \Big)
-\ra_\mcL \Big( \frac{8}{c^2} (\bbE \ep^2)^2 + c \eta^2 T \Big)^{1/2} \mcN(0,1)
+\ra_\mcL \Big( \frac{8}{c^2} (\bbE \ep^2)^2 + c \eta^2 T \Big)^{1/2}
+\mcN(0,1)
 \]
-where $c$ is some constant.  Now one can see where the term ``two time scales'' comes from.  Our estimate consists of two pieces, one piece is based on (relatively) ``low'' frequency sampling while the other is based on ``high'' frequency sampling.
+where $c$ is some constant.  Now one can see where the term ``two time
+scales'' comes from.  Our estimate consists of two pieces, one piece
+is based on (relatively) ``low'' frequency sampling while the other is
+based on ``high'' frequency sampling.
 
 \subsection{Further developments}
 
-These ideas can be extended to multi-scales sampling where one includes even more time scales in the realized volatility estimation of quadratic variation.  One can also extend this work by assuming some sort of dependency within the microstructure noise.  For instance, the microstructure noise might be an AR(1) process as opposed to white noise.  This appears to be the case in some stock data.  For more on dependent microstructure noise see \cite{ait-sahalia08}.
+These ideas can be extended to multi-scales sampling where one
+includes even more time scales in the realized volatility estimation
+of quadratic variation.  One can also extend this work by assuming
+some sort of dependency within the microstructure noise.  For
+instance, the microstructure noise might be an AR(1) process as
+opposed to white noise.  This appears to be the case in some stock
+data.  For more on dependent microstructure noise see
+\cite{ait-sahalia08}.
 
 \bibliography{rvnotes}{}
 \bibliographystyle{plain}
